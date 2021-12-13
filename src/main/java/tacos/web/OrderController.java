@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import lombok.extern.slf4j.Slf4j;
-import tacos.data.OrderRepository;
 import javax.validation.Valid;
 import org.springframework.validation.Errors;
+import tacos.repository.OrderRepository;
+import tacos.repository.entity.Order;
 
 @Slf4j
 @Controller
