@@ -11,10 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.extern.slf4j.Slf4j;
-import tacos.Taco;
-import tacos.Order;
-import tacos.Ingredient;
-import tacos.Ingredient.Type;
 import tacos.data.IngredientRepository;
 import javax.validation.Valid;
 import org.springframework.validation.Errors;
