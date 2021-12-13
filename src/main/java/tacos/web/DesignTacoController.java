@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.extern.slf4j.Slf4j;
-import tacos.data.IngredientRepository;
+import tacos.repository.entity.Taco;
+import tacos.repository.entity.Order;
+import tacos.repository.entity.Ingredient;
+import tacos.repository.entity.Ingredient.Type;
+import tacos.repository.IngredientRepository;
 import javax.validation.Valid;
 import org.springframework.validation.Errors;
-import tacos.data.TacoRepository;
+import tacos.repository.TacoRepository;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -24,31 +28,31 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @SessionAttributes("order")
 public class DesignTacoController {
 	private final IngredientRepository ingredientRepo;
-	
+
 	private TacoRepository tacoRepo;
-	
+
 	@Autowired
 	public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository tacoRepo) {
 		this.ingredientRepo = ingredientRepo;
 		this.tacoRepo = tacoRepo;
 	}
-	
+
 	@GetMapping
 	public String showDesignForm(Model model) {
 		List<Ingredient> ingredients = new ArrayList<>();
 		ingredientRepo.findAll().forEach(i -> ingredients.add(i));
-		
+
 		Type[] types = Ingredient.Type.values();
 		for (Type type : types) {
 			model.addAttribute(type.toString().toLowerCase(),
 					filterByType(ingredients, type));
 		}
-		
+
 		model.addAttribute("taco", new Taco());
-		
+
 		return "design";
 	}
-	
+
 	private List<Ingredient> filterByType(
 			List<Ingredient> ingredients, Type type) {
 		return ingredients
@@ -56,12 +60,12 @@ public class DesignTacoController {
 				.filter(x -> x.getType().equals(type))
 				.collect(Collectors.toList());
 	}
-	
+
 	@ModelAttribute(name = "order")
 	public Order order() {
 		return new Order();
 	}
-	
+
 	@ModelAttribute(name = "taco")
 	public Taco taco() {
 		return new Taco();
@@ -72,10 +76,10 @@ public class DesignTacoController {
 		if (errors.hasErrors()) {
 			return "design";
 		}
-		
+
 		Taco saved = tacoRepo.save(design);
 		order.addDesign(saved);
-		
+
 		return "redirect:/orders/current";
 	}
 }
